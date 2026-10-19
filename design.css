@@ -31,3 +31,7 @@ td.rain-wet{background:#e8f4eb!important}td.rain-zero{background:#fafafa!importa
 .year-form{grid-template-columns:230px max-content;justify-content:start;gap:12px}.year-selector{width:230px;max-width:100%;grid-template-columns:48px minmax(0,1fr) 48px;gap:6px}.year-selector select{min-height:44px;height:44px;padding:8px 10px;font-size:16px}.year-selector button{min-height:44px;height:44px;padding:8px 4px;font-size:14px}.year-form>#yearBtn{justify-self:start}@media(max-width:700px){.year-form{grid-template-columns:1fr}.year-form>#yearBtn{justify-self:stretch}.year-selector{width:230px;grid-template-columns:48px minmax(0,1fr) 48px}}
 
 .place-link{color:#216b50;text-decoration:underline;text-underline-offset:3px}
+
+.rain-incomplete{color:#b02c2c!important;font-weight:700!important}.rain-incomplete .rain-window{color:#b02c2c!important}.incomplete-day td:first-child{color:#b02c2c;font-weight:700;border-left:3px solid #b02c2c}td.rain-incomplete{background:#fff0ee!important}
+
+.cards>.card:first-child:has(.number.rain-incomplete){background:#fff4f2;border-color:#dfa6a6}

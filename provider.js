@@ -29,7 +29,7 @@ function refreshProvider(){
  $('databaseNote').innerHTML=provider==='era5'?sourceDescription().replace('방목리카페',cafeMapLink()):sourceDescription();$('latLabel').innerHTML=provider==='kma'?'산청 관측소 289 · 석대마을과 다른 위치':cafeMapLink()+' · 35.3249° N, 127.9225° E';$('apiHint').textContent=provider==='kma'?'기상청 관측 · 전일 자료 제공 지연 가능':'ERA5 재분석 · 7일 전까지 조회';updateWeekday();
 }
 function setupProvider(){
- $('database').onchange=()=>{if(isWorking()){$('database').value=provider;return;}provider=$('database').value;clear();resetComparison();resetYear();refreshProvider();$('status').textContent='자료 출처를 변경했습니다. 기간을 선택하고 조회하세요.';$('compareStatus').textContent=$('yearStatus').textContent='선택한 출처로 조회하세요.';saveSettings();};refreshProvider();
+ $('database').onchange=()=>{if(isWorking()){$('database').value=provider;return;}provider=$('database').value;clear();resetComparison();resetYear();refreshProvider();if(mode==='daily')$('period').value=providerLatest();$('status').textContent='자료 출처를 변경했습니다. 기간을 선택하고 조회하세요.';$('compareStatus').textContent=$('yearStatus').textContent='선택한 출처로 조회하세요.';saveSettings();if(mode==='daily'&&typeof activeView!=='undefined'&&activeView==='weather')loadLatestDaily();};refreshProvider();
 }
 function restoreCache(){if(memoryCache.size)return;try{const saved=JSON.parse(localStorage.getItem(CACHE_KEY)||'[]');for(const [key,value]of saved)if(Date.now()<value.expires)memoryCache.set(key,value);}catch{}}
 function putCache(key,value){memoryCache.delete(key);memoryCache.set(key,value);while(memoryCache.size>18)memoryCache.delete(memoryCache.keys().next().value);try{localStorage.setItem(CACHE_KEY,JSON.stringify([...memoryCache]));}catch{/* Storage full/private mode: the current session cache remains usable. */}}
@@ -71,7 +71,7 @@ function sourceIntervals(data){
  return intervals;
 }
 async function fetchWeatherRange(start,end,options={}){
- const data=await fetchWeatherSource(start,end,options),intervals=sourceIntervals(data).filter(r=>r.start.slice(0,10)>=start&&r.end<=nextWeatherDay(end)+'T00:00'),intervalByStart=new Map(intervals.map(r=>[r.start,r]));
+ const data=options.sourceData||await fetchWeatherSource(start,end,options),intervals=sourceIntervals(data).filter(r=>r.start.slice(0,10)>=start&&r.end<=nextWeatherDay(end)+'T00:00'),intervalByStart=new Map(intervals.map(r=>[r.start,r]));
  const h={time:[],temperature_2m:[],relative_humidity_2m:[],precipitation:[],wind_speed_10m:[],wind_direction_10m:[]};
  const sourceMap=data.sourceProvider==='kma'?new Map(data.items.map(r=>[r.time,r])):new Map(data.hourly.time.map((time,i)=>[time,{temp:data.hourly.temperature_2m[i],humidity:data.hourly.relative_humidity_2m[i],wind:data.hourly.wind_speed_10m[i],dir:data.hourly.wind_direction_10m[i]}]));
  for(let time=start+'T00:00';time<=end+'T23:00';time=shiftWeatherHour(time,1)){
@@ -93,4 +93,4 @@ async function fetchWeatherRange(start,end,options={}){
 }
 function rangeTotal(data){return data.rainTotal;}
 function exportCSV(filename,rows){const csv='\ufeff'+rows.map(row=>row.map(value=>'"'+String(value??'').replaceAll('"','""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'})),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function csvMetadata(data,start,end){return [['출처',sourceName()],['집계기준','KST · 온도/습도/풍속은 유효 시간자료 평균 · 최저/최고는 시간값 · 강수: '+(data.rainBasis||'시간 누적 구간 합계')],['조회범위',start,end],['조회시각(KST)',new Date(data.retrievedAt).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})],['기준장소','방목리카페',REQUEST_COORDINATES.latitude,REQUEST_COORDINATES.longitude],['실제 자료 위치',data.station?'산청 ASOS 289':'ERA5 격자',data.latitude,data.longitude],['마지막 기상 수신시각(KST)',data.lastReceived||'없음'],['마지막 강수 집계 완료일',data.lastCompleteRainDay||'없음'],['강수 확인분 합계(mm)',data.knownRainTotal,'결측이 있으면 전체 합계가 아닙니다.']];}
+function csvMetadata(data,start,end){return [['출처',sourceName()],['집계기준','KST · 온도/습도/풍속은 유효 시간자료 평균 · 최저/최고는 시간값 · 강수: '+(data.rainBasis||'시간 누적 구간 합계')],['조회범위',start,end],['조회시각(KST)',new Date(data.retrievedAt).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})],['기준장소','방목리카페',REQUEST_COORDINATES.latitude,REQUEST_COORDINATES.longitude],['실제 자료 위치',data.station?'산청 ASOS 289':'ERA5 격자',data.latitude,data.longitude],['마지막 기상 수신시각(KST)',data.lastReceived||'없음'],['마지막 강수 집계 완료일',data.lastCompleteRainDay||'없음'],['누적 강수량 표시(mm)',displayedRain(data),data.rainTotal===null?'확인분 · 미완료 포함 · 전체 합계 아님':'완료'],['강수 확인분 합계(mm)',data.knownRainTotal,'결측이 있으면 전체 합계가 아닙니다.']];}
