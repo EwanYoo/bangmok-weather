@@ -40,3 +40,5 @@ td.rain-wet{background:#e8f4eb!important}td.rain-zero{background:#fafafa!importa
 @media(max-width:900px){.hero{flex-wrap:wrap}.location{display:block;flex-basis:100%;max-width:none;padding:12px 14px}}
 
 .location-basis{margin-top:6px}.location-basis summary{font-size:13px;padding:2px 0;width:fit-content}.location-basis .location-note{margin-top:6px}.location{flex-basis:340px;max-width:340px}@media(max-width:900px){.location{flex-basis:100%;max-width:none}}
+
+.location-source-link{display:block;width:fit-content;color:var(--muted);text-decoration:underline;text-decoration-color:#b2c6b9;text-underline-offset:4px}.location-source-link:hover{color:var(--green);text-decoration-color:currentColor}
