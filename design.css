@@ -42,3 +42,9 @@ td.rain-wet{background:#e8f4eb!important}td.rain-zero{background:#fafafa!importa
 .location-basis{margin-top:6px}.location-basis summary{font-size:13px;padding:2px 0;width:fit-content}.location-basis .location-note{margin-top:6px}.location{flex-basis:340px;max-width:340px}@media(max-width:900px){.location{flex-basis:100%;max-width:none}}
 
 .location-source-link{display:block;width:fit-content;color:var(--muted);text-decoration:underline;text-decoration-color:#b2c6b9;text-underline-offset:4px}.location-source-link:hover{color:var(--green);text-decoration-color:currentColor}
+
+.visitor-counter{margin:24px auto 0;max-width:660px;text-align:center;font-size:13px;color:var(--muted)}
+.visitor-counter summary{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;padding:10px;list-style:none;color:var(--muted);font-weight:400;min-height:44px}
+.visitor-counter summary::-webkit-details-marker{display:none}.visitor-counter b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;margin-left:5px}.visitor-info{font-size:14px;color:var(--green)}
+.visitor-explanation{text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:#fff;line-height:1.75}.visitor-explanation p+p{margin-top:8px}.visitor-explanation #visitorStatus:empty{display:none}.visitor-explanation #visitorStatus{color:#8f590c}.visitor-explanation button{margin-top:10px}.visitor-counter+.copyright{margin-top:12px}
+@media(max-width:480px){.visitor-counter summary{gap:14px;font-size:13px}}
